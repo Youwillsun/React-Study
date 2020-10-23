@@ -401,7 +401,8 @@ class ParentCom extends React.Component {
 
 ReactDOM.render(
   <ParentCom />,
-  do
+  documnet.getElementById('root')
+）
 ```
 
 ## React 列表渲染
@@ -1227,4 +1228,82 @@ ReactDOM.render(
   document.getElementById('root')
 )
 ```
+
+## React —— Typescript
+
+### 问题一：
+
+在react内写typescript定义类组件时，要注意一点：
+
+```react
+class Add extends React.Component {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      myEvent: 123
+    }
+  }
+
+  render() {
+    return (
+      <div>
+          <input type="text" value={this.state.myEvent}/>
+      </div>
+    );
+  }
+}
+```
+
+这样直接读取 state 中的 myEvent属性时 会告诉你 `this.state 是 Readonly` 的，没有办法读取。
+
+### 解决办法：
+
+```react
+// 写法一：
+class Add extends React.Component<any,any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      myEvent: 123
+    }
+  }
+
+  render() {
+    return (
+      <div>
+          <input type="text" value={this.state.myEvent}/>
+      </div>
+    );
+  }
+}
+
+// 写法二
+type propsType = {
+	// props的类型
+}
+type stateType = {
+  myEvent: string | number
+}
+class Add extends React.Component<propsType,stateType> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      myEvent: 123
+    }
+  }
+
+  render() {
+    return (
+      <div>
+          <input type="text" value={this.state.myEvent}/>
+      </div>
+    );
+  }
+}
+```
+
+我们看一下继承 `React.Component`就会发现，第一个参数指定的是 props的类型，第二个是 state的类型。- 
+
+- **推荐第二种写法。**
+- `React.Component<any, any>`这样一来对state和props的类型检测就失去意义了，所以不太建议使用。
 
