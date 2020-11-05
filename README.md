@@ -948,6 +948,15 @@ class App2 extends React.Component{
 }
 ```
 
+> **注意：在父组件和子组件嵌套的情况下，如果要在子组件中使用`props.history.push`，需要在父组件调用子组件定义的跳转事件时，要传递`history`**
+>
+> ```
+> <chidCom history={this.props.history}></childCom>
+> 注：一般出现*Cannot read property 'push' of undefined*就可以用这个解决。
+> ```
+
+
+
 ## Redux
 
 - 解决React数据管理（状态管理）,用于中大型，数据比较庞大，组件之间数据交互多的情况下使用。
